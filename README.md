@@ -10,7 +10,9 @@
 ![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-blue)
 [![Docker Hub](https://img.shields.io/badge/Docker%20Hub-lxde--novnc-blue)](https://hub.docker.com/r/jmeiracorbal/lxde-novnc)
 
-This project provides a lightweight a Linux desktop through the browser running inside a container.
+This project provides a graphical interface for Linux desktop using the VNC protocol redirected to the browser throug websockets. It's ideal for remote GUI access, testing, or educational sandboxes.
+
+![alt text](flujo-xvfb-x11vnc.png "Flow xvfb redirect to x11vnc")
 
 # Getting started
 
@@ -32,25 +34,32 @@ services:
     restart: unless-stopped
 ```
 
+Execute the compose:
+
+```yaml
+docker compose up -d
+```
+
 Required and optional ports:
 
 * `6080`: creates the access via browser.
 * `5900`: it's optional. Add if you need VNC access with a traditional client (Guacamole).
 
-Access:
-
-```yaml
-docker compose up --build -d
-```
-
-After running, go to http://localhost:6080 and you'll see the LXDE desktop running on the browser.
+> After running, go to http://localhost:6080 and you'll see the LXDE desktop running on the browser.
 
 ## Components
 
-* Xvfb (virtual framebuffer): it's the output inside container, but is not real because simulates a memory screen where is drawed the desktop environment. Has the `DISPLAY=:0` value as a another Linux desktop app.
-* x11vnc server: this project uses VNC protocol, like RDP (Remote Desktop), x11... In remote. `x11vnc` is the VNC server where
-  the desktop is drawed; draw the background, panel, windows, menus, etc. over the framebuffer (:0) que provee Xvfb.
-* websockify: bridge to connect VNC protocol through web sockets. The bridge is listen on port 6080 (HTTP/WebSocket) to translate WebSocket signal to TCP, and redirect the traffic inside port 5900, where is the real VNC server listen.
+* **Xvfb (virtual framebuffer)**
+
+It's the output inside container, but is not real because simulates a memory screen where is drawed the desktop environment. Has the `DISPLAY=:0` value as a another Linux desktop app.
+
+* **x11vnc server**
+
+This project uses VNC protocol, like RDP (Remote Desktop), x11... In remote. `x11vnc` is the VNC server where the desktop is drawed; draw the background, panel, windows, menus, etc. over the framebuffer (:0) que provee Xvfb.
+
+* **websockify** 
+
+Connect VNC protocol through web sockets. The bridge is listen on port 6080 (HTTP/WebSocket) to translate WebSocket signal to TCP, and redirect the traffic inside port 5900, where is the real VNC server listen.
 * noVNC: it's a VNC client. It's loaded from web browser (`/usr/share/novnc`).
 
 # Setup and customization
@@ -78,12 +87,6 @@ environment:
 This container doesn't use VNC password authentication as default (x11vnc is started with the flag -nopw). This is intentional to make the environment accessible. If password protection is required, remove the -nopw argument in entrypoint.sh and ensure VNC_PASS is correctly configured.
 
 > If you want to add HTTP authentication bellow this container, it will be performed externally. Examples: through reverse proxy such as Nginx, Traefik...
-
-# Graphical interface and VNC redirect
-
-It leverages a virtual X server (Xvfb), a VNC server (x11vnc) and a web socket proxy (websockify) to expose a graphical interface through the client noVNC.
-
-![alt text](flujo-xvfb-x11vnc.png "Flow xvfb redirect to x11vnc")
 
 # Support
 
