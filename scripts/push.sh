@@ -7,9 +7,9 @@ set -e
 IMAGE_NAME=jmeiracorbal/lxde-novnc
 TAG=${1:-test}
 
-# Crear builder si no existe
-docker buildx inspect mybuilder >/dev/null 2>&1 || docker buildx create --name mybuilder --use
-docker buildx use mybuilder
+# Create and use a builder if not exists
+# docker buildx inspect mybuilder >/dev/null 2>&1 || docker buildx create --name mybuilder --use
+# docker buildx use mybuilder
 
 echo "authenticating to Docker Hub..."
 docker login
@@ -19,6 +19,6 @@ docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --tag $IMAGE_NAME:$TAG \
   --push \
-  .
+  ./build
 
 echo "$IMAGE_NAME:$TAG is published on Docker Hub"

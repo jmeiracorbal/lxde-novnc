@@ -43,3 +43,5 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/lxde-novnc:latest
             ${{ secrets.DOCKER_USERNAME }}/lxde-novnc:${{ steps.vars.outputs.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
