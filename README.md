@@ -1,8 +1,16 @@
-# LXDE noVNC
+# lxde-novnc
 
-This project provides a lightweight a Linux desktop through the browser running inside a container using Docker.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/jmeiracorbal/lxde-novnc)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jmeiracorbal/lxde-novnc/build.yml)
+![Docker Image Size](https://img.shields.io/docker/image-size/jmeiracorbal/lxde-novnc/latest)
+![Build Status](https://github.com/jmeiracorbal/lxde-novnc/actions/workflows/build.yml/badge.svg)
+![Last Commit](https://img.shields.io/github/last-commit/jmeiracorbal/lxde-novnc)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jmeiracorbal/lxde-novnc)
+![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-blue)
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-lxde--novnc-blue)](https://hub.docker.com/r/jmeiracorbal/lxde-novnc)
 
-![alt text](flujo-xvfb-x11vnc.png "Flow xvfb redirect to x11vnc")
+This project provides a lightweight a Linux desktop through the browser running inside a container.
 
 # Getting started
 
@@ -26,8 +34,8 @@ services:
 
 Required and optional ports:
 
-* 6080: creates the access via browser.
-* 5900: it's optional. Add if you need VNC access with a traditional client (Guacamole).
+* `6080`: creates the access via browser.
+* `5900`: it's optional. Add if you need VNC access with a traditional client (Guacamole).
 
 Access:
 
@@ -37,16 +45,24 @@ docker compose up --build -d
 
 After running, go to http://localhost:6080 and you'll see the LXDE desktop running on the browser.
 
-# Configuration
+## Components
 
-You can customize the container using environment variables in your compose file or when running with docker run:
+* Xvfb (virtual framebuffer): it's the output inside container, but is not real because simulates a memory screen where is drawed the desktop environment. Has the `DISPLAY=:0` value as a another Linux desktop app.
+* x11vnc server: this project uses VNC protocol, like RDP (Remote Desktop), x11... In remote. `x11vnc` is the VNC server where
+  the desktop is drawed; draw the background, panel, windows, menus, etc. over the framebuffer (:0) que provee Xvfb.
+* websockify: bridge to connect VNC protocol through web sockets. The bridge is listen on port 6080 (HTTP/WebSocket) to translate WebSocket signal to TCP, and redirect the traffic inside port 5900, where is the real VNC server listen.
+* noVNC: it's a VNC client. It's loaded from web browser (`/usr/share/novnc`).
+
+# Setup and customization
+
+You can customize the container using the environment variables in your compose file or using docker run command:
 
 * `VNC_USER`: username created inside the container. Default value is docker.
 * `VNC_PASS`: VNC password used if authentication is enabled. Default value is letmein.
 * `RESOLUTION`: screen resolution of the virtual desktop (WxH). The default value is 1280x720.
 * `DISPLAY`: it's the virtual display number (should not be changed). The default value is :0.
 
-> By default, the container doesn't enforce the password auth. See the Authentication and security section for how to enable it.
+> By default, the container doesn't enforce the password auth. See the [Authentication and security](#authentication-and-security) section for how to enable it.
 
 Example usage with custom resolution and credentials:
 
@@ -57,45 +73,21 @@ environment:
   - RESOLUTION=1440x900
 ```
 
-# Components
-
-* Xvfb (virtual framebuffer): it's the output inside container, but is not real because simulates a memory screen where is drawed the desktop environment. Has the `DISPLAY=:0` value as a another Linux desktop app.
-* x11vnc server: this project uses VNC protocol, like RDP (Remote Desktop), x11... In remote. `x11vnc` is the VNC server where
-  the desktop is drawed; draw the background, panel, windows, menus, etc. over the framebuffer (:0) que provee Xvfb.
-* websockify: bridge to connect VNC protocol through web sockets. The bridge is listen on port 6080 (HTTP/WebSocket) to translate WebSocket signal to TCP, and redirect the traffic inside port 5900, where is the real VNC server listen.
-* noVNC: it's a VNC client. It's loaded from web browser (`/usr/share/novnc`).
-
 # Authentication and security
 
 This container doesn't use VNC password authentication as default (x11vnc is started with the flag -nopw). This is intentional to make the environment accessible. If password protection is required, remove the -nopw argument in entrypoint.sh and ensure VNC_PASS is correctly configured.
 
 > If you want to add HTTP authentication bellow this container, it will be performed externally. Examples: through reverse proxy such as Nginx, Traefik...
 
-# Graphical interface VNC redirect
+# Graphical interface and VNC redirect
 
 It leverages a virtual X server (Xvfb), a VNC server (x11vnc) and a web socket proxy (websockify) to expose a graphical interface through the client noVNC.
 
-```text
-[Browser]
-     ↓ (HTML)
-   http://localhost:6080/vnc.html
-     ↓
-  [noVNC Client]
-     ↓ (WebSocket)
-  ws://localhost:6080/websockify
-     ↓
-  [websockify]
-     ↓ (VNC server)
-  localhost:5900
-     ↓ 
-  [x11vnc]
-     ↓
-  [Xvfb :0] ← LXDE desktop
-```
+![alt text](flujo-xvfb-x11vnc.png "Flow xvfb redirect to x11vnc")
 
 # Support
 
-One of the most important ideas is to create a minimal yet full desktop experience that will run reliably platform with Docker from Linux and macOS (Silicon, Intel) and Windows without require an external VNC client or a full desktop environment.
+One of the most important ideas is to create a minimal desktop experience that will run on any platform with Docker using Linux, macOS (Silicon, Intel) or Windows without require an external VNC client.
 
 # Disclaimers 
 
