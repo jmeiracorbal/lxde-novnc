@@ -8,10 +8,17 @@ export RESOLUTION=1280x720
 export USER=${VNC_USER:-docker}
 export HOME=/home/$USER
 
+
 # Crear usuario si no existe
 if ! id "$USER" &>/dev/null; then
+  echo "Creando usuario $USER..."
   useradd -m -s /bin/bash "$USER"
 fi
+
+# Forzar copia de configuración LXPanel personalizada
+mkdir -p "$HOME/.config/lxpanel/LXDE/panels"
+cp -f /etc/skel/.config/lxpanel/LXDE/panels/panel "$HOME/.config/lxpanel/LXDE/panels/panel"
+chown -R "$USER:$USER" "$HOME/.config/lxpanel"
 
 echo "Run virtual graphic desktop on $DISPLAY..."
 Xvfb $DISPLAY -screen 0 ${RESOLUTION}x24 &

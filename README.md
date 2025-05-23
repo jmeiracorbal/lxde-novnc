@@ -4,7 +4,6 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/jmeiracorbal/lxde-novnc)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jmeiracorbal/lxde-novnc/build.yml)
 ![Docker Image Size](https://img.shields.io/docker/image-size/jmeiracorbal/lxde-novnc/latest)
-![Build Status](https://github.com/jmeiracorbal/lxde-novnc/actions/workflows/build.yml/badge.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/jmeiracorbal/lxde-novnc)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jmeiracorbal/lxde-novnc)
 ![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-blue)
@@ -86,11 +85,68 @@ environment:
 
 This container doesn't use VNC password authentication as default (x11vnc is started with the flag -nopw). This is intentional to make the environment accessible. If password protection is required, remove the -nopw argument in entrypoint.sh and ensure VNC_PASS is correctly configured.
 
-> If you want to add HTTP authentication bellow this container, it will be performed externally. Examples: through reverse proxy such as Nginx, Traefik...
+> If you want to add HTTP authentication bellow this container, it'll be performed externally. You can use tools like nginx, Traefik...
+
+# LXPanel customization
+
+The desktop panel has been preconfigured to provide a clean and minimal interface. You need to considerer that this components aren't included:
+- No CPU usage monitor. Fails on runtime with Docker.
+- No Desktop Pager (breaks the taskbar, check the issue).
+
+The traditional LXDE layout is preserved. If you want to customize the panel, you can edit the panel definition file before building the image:
+
+![alt text](default-lxpanel-config.png)
+
+You can create on your project this structure:
+
+```bash
+mkdir -p config/lxpanel/LXDE/panels/panel
+```
+
+This panel file controls appearance and contents of the LXDE panel. You can add or remove elements: application launchers, taskbar, shutdown/logout buttons, etc.
+
+Example:
+
+```yaml
+services:
+  desktop:
+    image: jmeiracorbal/lxde-novnc:latest
+    ports:
+      - "6080:6080"
+      - "5900:5900"
+    volumes:
+      - ./config/lxpanel/LXDE/panels/panel:/home/docker/.config/lxpanel/LXDE/panels/panel:ro
+    environment:
+      - VNC_USER=docker
+      - VNC_PASS=letmein
+    restart: unless-stopped
+```
+
+The path `config/lxpanel/LXDE/panels/panel` represents the real structure on the system, but you can
+include your own path on compose volume:
+
+```yaml
+    volumes:
+      - ./panel:/home/docker/.config/lxpanel/LXDE/panels/panel:ro
+```
+
+When the container starts, the system will load your custom panel layout instead of the default.
+
+## Minimal configuration for LXPanel
+
+The panel configuration file is a complete layout definition. If you override it using a custom file, you need to known that the file contains all the minimal components to work correctly by default.
+
+Example: if your file only defines the digital clock plugin, only the clock will appear on the panel. You won’t see the menu, taskbar or any other element unless the declared.
+
+You can use the example. Copy and replace it by your custom lxpanel:
+
+```bash
+cp ./examples/panel ./lxpanel/panel
+```
 
 # Support
 
-One of the most important ideas is to create a minimal desktop experience that will run on any platform with Docker using Linux, macOS (Silicon, Intel) or Windows without require an external VNC client.
+The most important idea is to create a minimal desktop experience that will run on any platform with Docker using Linux, macOS (Silicon, Intel) or Windows without require an external VNC client.
 
 # Disclaimers 
 
