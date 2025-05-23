@@ -4,7 +4,6 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/jmeiracorbal/lxde-novnc)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jmeiracorbal/lxde-novnc/build.yml)
 ![Docker Image Size](https://img.shields.io/docker/image-size/jmeiracorbal/lxde-novnc/latest)
-![Build Status](https://github.com/jmeiracorbal/lxde-novnc/actions/workflows/build.yml/badge.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/jmeiracorbal/lxde-novnc)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jmeiracorbal/lxde-novnc)
 ![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-blue)

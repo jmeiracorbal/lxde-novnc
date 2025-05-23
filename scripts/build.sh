@@ -15,4 +15,4 @@ docker buildx build \
   --load ./build
 
 # Run the image locally
-docker run -d --rm -p 6080:6080 -p 5900:5900 --name mylxde lxde-vnc:latest
+docker run -d --rm -p 6080:6080 -p 5900:5900 --name lxde-vnc lxde-vnc:latest
