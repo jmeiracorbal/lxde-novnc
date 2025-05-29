@@ -28,11 +28,6 @@ Xvfb $DISPLAY -screen 0 ${RESOLUTION}x24 &
 
 sleep 2
 
-echo "[INFO] Running the LXDE desktop..."
-su "$USER" -c "startlxde &"
-
-sleep 2
-
 echo "[INFO] Running x11vnc server..."
 
 mkdir -p "$HOME/.vnc"
@@ -64,6 +59,16 @@ else
 
   x11vnc -display $DISPLAY -rfbauth "$HOME/.vnc/passwd" -forever -shared -bg
 fi
+
+sleep 2
+
+echo "[INFO] Running the LXDE desktop..."
+
+# Asegurar entorno correcto para las apps lanzadas desde LXDE
+cd "$HOME"
+su "$USER" -c "cd \$HOME && startlxde &"
+
+sleep 2
 
 echo "[INFO] Running websockify en http://localhost:6080..."
 websockify --web=/usr/share/novnc 6080 localhost:5900 &
