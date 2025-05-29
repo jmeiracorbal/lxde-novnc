@@ -8,6 +8,6 @@ services:
       - "6080:6080"
       - "5900:5900"
     environment:
-      - VNC_USER=docker
+      - SYSTEM_USER=jmeiracorbal
       - VNC_PASS=letmein
     restart: unless-stopped

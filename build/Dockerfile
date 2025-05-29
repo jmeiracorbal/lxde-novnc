@@ -4,10 +4,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV DISPLAY=:0
 ENV RESOLUTION=1280x720
 
-# Rquired packages to build the environment and the lxde core through the x11vnc
+# Required packages to build the environment and the lxde core through the x11vnc
+# tigervnc-standalone-server for use vncpasswd command
 RUN apt-get update && apt-get install -y \
     lxde-core lxterminal \
     x11vnc xvfb \
+    tigervnc-standalone-server \
     novnc websockify \
     net-tools curl wget \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
