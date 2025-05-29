@@ -1,4 +1,4 @@
-# Contributor Code of Conduct
+# Code of conduct
 
 ## Purpose
 
@@ -21,7 +21,7 @@ To maintain a sustainable and usable project, the contributors are expected to a
 5. Provide a clear and descriptive title and description of your changes.
 6. Wait for review and approval.
 
-We **do not accept**:
+It isn't accepted:
 - Pushes directly into the `main` branch.
 - Changes without a review and description.
 - Contributions that change the licensing terms.
