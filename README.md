@@ -61,10 +61,9 @@ It's the output inside container, but is not real because simulates a memory scr
 
 This project uses VNC protocol, like RDP (Remote Desktop), x11... In remote. `x11vnc` is the VNC server where the desktop is drawed. It's drawed in background; the panel, windows, menus... Over the framebuffer (:0) that provides `Xvfb`.
 
-## **webSockify
+## webSockify
 
 Connect VNC protocol through web sockets. The bridge is listen on port 6080 (HTTP/WebSocket) to translate WebSocket signal to TCP, and redirect the traffic inside port 5900, where is the real VNC server listen.
-
 
 ## noVNC
 
