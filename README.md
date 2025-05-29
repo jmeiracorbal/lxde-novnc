@@ -171,7 +171,8 @@ cp ./examples/panel ./lxpanel/panel
 # Support related projects
 
 * [Guaca-Guaca](https://github.com/jmeiracorbal/guaca-guaca): Guaca-Guaca is a pre-configured Apache Guacamole setup on Docker.
-* [noVNC](https://github.com/novnc/noVNC): the open-source VNC browser client - noVNC is a VNC client JavaScript library as well as an application built on top of that library. noVNC runs well in any modern browser, including mobile browsers (iOS and Android).
+* [noVNC](https://github.com/CendioOssman/noVNC): the open-source VNC browser client - noVNC is a VNC client JavaScript library as well as an application built on top of that library. noVNC runs well in any modern browser, including mobile browsers (iOS and Android).
+* [webSockify](https://github.com/CendioOssman/websockify): this project was formerly named wsproxy and was part of the noVNC project.
 
 # Disclaimers 
 
