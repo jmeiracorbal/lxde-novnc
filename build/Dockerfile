@@ -1,4 +1,4 @@
-FROM ubuntu:25.10
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISPLAY=:0
