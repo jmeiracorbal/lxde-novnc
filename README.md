@@ -1,3 +1,5 @@
+> Important: this project was archived and moved to [Zero Desktop](https://github.com/zero-desktop/zero-desktop).
+
 # LXDE noVNC
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
